@@ -8,15 +8,17 @@ import numpy as np
 import pickle
 from tqdm import tqdm
 from concurrent import futures
+#accounts = pickle.load(open('tools/sliced_accounts_2945.pickle','rb'))
+#balance = pickle.load(open('ind_balances/sliced_balances_2945.pickle','rb'))
 
+
+
+#warnings.filterwarnings("ignore")
 #up to just before London upgrade
 LIMIT=12950000
 
-#review this
-if not os.path.exists('ind_fifo_monthly'):
-    os.makedirs('ind_fifo_monthly')
 
-with open('sample_data/weekly_blocks_list.pickle','rb') as outf:
+with open('weekly_blocks_list.pickle','rb') as outf:
     blocks_list_temp = pickle.load(outf)
 
 blocks_list=[]
@@ -74,7 +76,7 @@ def processFile(filename):
                 #If they have still something
                 if len(accounts[_key][0])>0 and len(accounts[_key][1])>0:            
                     arrangedKeys=[list(accounts[_key][0].keys()),list(accounts[_key][1].keys())]
-                    arrangedKeys[0].sort(reverse=True)
+                    arrangedKeys[0].sort()
                     arrangedKeys[1].sort()
                     iterationnum=0
 
@@ -83,7 +85,7 @@ def processFile(filename):
                         arrangedKeys[0]=list(accounts[_key][0].keys())
                         test=np.array(arrangedKeys[0])
                         #modifica magica 
-                        test = np.sort(test)[::-1]
+                        test = np.sort(test)
                         border=_border
                         for i in range(0, len(test[test<border])):
                             counter = test[test<border][(len(test[test<border])-1)-i]
@@ -116,11 +118,11 @@ def processFile(filename):
                     #print('Adding ',_key)
                     velocities[_key]=ind_velocity[blocks_list]
                     balances[_key]=ind_balances  
-    pickle.dump([velocities,balances], open(filename.replace('temp','ind_fifo_monthly'),'wb'))
+    pickle.dump([velocities,balances], open(filename.replace('tools','ind_monthly'),'wb'))
     print('done', filename)
 
 
 with futures.ProcessPoolExecutor(max_workers=48) as ex:
-    for _filename in  glob.glob('temp/sliced_accounts_*.pickle'):
+    for _filename in  glob.glob('tools/sliced_accounts_*.pickle'):
         ex.submit(processFile, _filename)
     print('******MAIN******: closing')

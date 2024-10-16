@@ -8,9 +8,13 @@ import pickle
 from tqdm import tqdm
 from concurrent import futures
 
-#warnings.filterwarnings("ignore")
 #up to just before London upgrade
 LIMIT=12950000
+
+#We need another temporary directory to store the results
+if not os.path.exists('tools'):
+    os.makedirs('tools')
+
 
 def processSlicedFile(filename):
     velocities = {}
@@ -43,7 +47,8 @@ def processSlicedFile(filename):
     final_velocity=np.zeros(LIMIT)
     for _key in velocities.keys():
         final_velocity+=velocities[_key]
-    with open(filename.replace('accounts','results').replace('tools','returns'), 'wb') as f2:
+    #Please change this accordingly
+    with open(filename.replace('accounts','results').replace('temp','tools'), 'wb') as f2:
         pickle.dump(final_velocity, f2)
     print(f'Done filename {filename}')
 

@@ -13,6 +13,10 @@ import pandas as pd, sys, os, csv
 import csv
 from glob import glob
 
+# Create a dictionary to store the accounts and the working files in the folder where the script is executed
+if not os.path.exists('temp'):
+    os.makedirs('temp')
+
 accounts= dict()
 out_premined= open('sample_data/premined.csv','r')
 reader_premined =csv.reader(out_premined)
@@ -117,7 +121,7 @@ print('Good:', counter_good , ' bad', counter_error)
 
 
 for _block in blocks:
-    if 2>1:
+    if True:
         print(blockTransfers[_block])
         out_fee= open(blockTransfers[_block],'r')
         reader_fee =csv.DictReader(out_fee)
@@ -146,20 +150,7 @@ for _block in blocks:
         out_fee.close()
 
 
-with open('int_raw_accounts.pickle', 'wb') as f:
+with open('temp/int_raw_accounts.pickle', 'wb') as f:
     pickle.dump(accounts, f)
 
-
-
-import pickle
-import itertools
-filecounter=1
-for _i in range(0,len(accounts.keys()),20000):
-    temp  = dict(itertools.islice(accounts.items(),_i,_i+20000))
-    print (len(temp.keys()))
-    if not os.path.exists('temp'):
-       os.makedirs('temp')
-    with open(f'temp/sliced_accounts_{filecounter}.pickle', 'wb') as f:
-        pickle.dump(temp, f)
-    filecounter+=1
 print('Done!')

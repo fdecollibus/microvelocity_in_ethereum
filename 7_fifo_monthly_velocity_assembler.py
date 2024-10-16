@@ -21,4 +21,4 @@ for _key in keys:
             if loader[0][_key][_i]>0:
                 accumulator[0][_i].append(loader[0][_key][_i])
                 accumulator[1][_i].append(loader[1][_key][_i])
-pickle.dump(accumulator, open('file_for_correlation_fifo.pickle','wb'))
+pickle.dump(accumulator, open('tmp/file_for_correlation_fifo.pickle','wb'))

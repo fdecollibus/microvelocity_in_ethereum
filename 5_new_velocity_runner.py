@@ -12,7 +12,7 @@ from concurrent import futures
 #up to just before London upgrade
 LIMIT=12950000
 
-with open('/mnt/ssd_data/ethereum_export/velocity/weekly_blocks_list.pickle','rb') as outf:
+with open('sample_data/weekly_blocks_list.pickle','rb') as outf:
     blocks_list = pickle.load(outf)
 
 
@@ -44,12 +44,12 @@ def processSlicedFile(filename):
                         accounts[_key][1][border] -= accounts[_key][0][counter]
                         accounts[_key][0].pop(counter)
             velocities[_key]=ind_velocity[blocks_list]
-    with open(filename.replace('accounts','results').replace('tools','ind_velocities'), 'wb') as f2:
+    with open(filename.replace('accounts','results').replace('temp','tools'), 'wb') as f2:
         pickle.dump(velocities, f2)
     print(f'Done filename {filename}')
 
 
 with futures.ProcessPoolExecutor(max_workers=10) as ex:
-    for _filename in  glob.glob('tools/sliced_accounts_*.pickle'):
+    for _filename in  glob.glob('temp/sliced_accounts_*.pickle'):
         ex.submit(processSlicedFile, _filename)
     print('******MAIN******: closing')

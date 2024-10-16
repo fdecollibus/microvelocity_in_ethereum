@@ -8,15 +8,15 @@ import numpy as np
 import pickle
 from tqdm import tqdm
 from concurrent import futures
-#accounts = pickle.load(open('tools/sliced_accounts_2945.pickle','rb'))
-#balance = pickle.load(open('ind_balances/sliced_balances_2945.pickle','rb'))
-
+import os
 
 
 #warnings.filterwarnings("ignore")
 #up to just before London upgrade
 LIMIT=12950000
 
+if not os.path.exists('ind_lifo_monthly'):
+    os.makedirs('ind_lifo_monthly')
 
 with open('weekly_blocks_list.pickle','rb') as outf:
     blocks_list_temp = pickle.load(outf)
@@ -118,11 +118,11 @@ def processFile(filename):
                     #print('Adding ',_key)
                     velocities[_key]=ind_velocity[blocks_list]
                     balances[_key]=ind_balances  
-    pickle.dump([velocities,balances], open(filename.replace('tools','ind_lifo_monthly'),'wb'))
+    pickle.dump([velocities,balances], open(filename.replace('temp','ind_lifo_monthly'),'wb'))
     print('done', filename)
 
 
 with futures.ProcessPoolExecutor(max_workers=48) as ex:
-    for _filename in  glob.glob('tools/sliced_accounts_*.pickle'):
+    for _filename in  glob.glob('temp/sliced_accounts_*.pickle'):
         ex.submit(processFile, _filename)
     print('******MAIN******: closing')
