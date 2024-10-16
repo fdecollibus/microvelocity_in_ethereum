@@ -149,6 +149,8 @@ for _block in blocks:
 with open('int_raw_accounts.pickle', 'wb') as f:
     pickle.dump(accounts, f)
 
+
+
 import pickle
 import itertools
 filecounter=1
